@@ -4,7 +4,7 @@ namespace TaskManager.Domain.ValueObjects;
 
 public enum TaskState
 {
-    Pending,
+    NotStarted,
     InProgress,
     Completed,
 }
@@ -18,10 +18,7 @@ public sealed class TaskStatus : ValueObject
         Value = value;
     }
 
-    public static Result<TaskStatus> Create(TaskState value)
-    {
-        return new TaskStatus(value);
-    }
+    public static TaskStatus Create(TaskState value) => new TaskStatus(value);
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {

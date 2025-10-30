@@ -21,6 +21,10 @@ public sealed class TaskTitle : ValueObject
         {
             return DomainErrors.TaskErrors.TitleTooLong;
         }
+
+        value.TrimStart();
+        value.TrimEnd();
+
         return new TaskTitle(value);
     }
 
