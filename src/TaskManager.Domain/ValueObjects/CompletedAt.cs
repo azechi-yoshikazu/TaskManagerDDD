@@ -7,6 +7,6 @@ namespace TaskManager.Domain.ValueObjects
         {
         }
 
-        public static CompletedAt Create() => new CompletedAt(DateTime.Now);
+        public static CompletedAt Create() => new CompletedAt(DateTime.UtcNow);
     }
 }
