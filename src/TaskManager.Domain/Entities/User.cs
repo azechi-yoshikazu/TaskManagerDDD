@@ -6,7 +6,7 @@ namespace TaskManager.Domain.Entities;
 public sealed class User : AggregateRoot<UserId>
 {
     public DisplayName DisplayName { get; private set; }
-    public Email EMail { get; private set; }
+    public Email Email { get; private set; }
 
     public Role Role { get; private set; }
 
@@ -17,7 +17,7 @@ public sealed class User : AggregateRoot<UserId>
     private User(UserId id, DisplayName displayName, Email email, Role role) : base(id)
     {
         DisplayName = displayName;
-        EMail = email;
+        Email = email;
         Role = role;
         JoinedAt = DateTime.UtcNow;
         Active = true;
@@ -74,7 +74,7 @@ public sealed class User : AggregateRoot<UserId>
             return emailResult.Error!;
         }
 
-        EMail = emailResult.Value!;
+        Email = emailResult.Value!;
 
         return Result.Success();
     }
