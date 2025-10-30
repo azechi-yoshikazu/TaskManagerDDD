@@ -43,7 +43,10 @@ public class Project : AggregateRoot<ProjectId>
             return nameResult.Error!;
         }
 
-        return new Project(ProjectId.Create(), nameResult.Value!, ownerId);
+        var project = new Project(ProjectId.Create(), nameResult.Value!, ownerId);
+        project.RaiseDomainEvent(new DomainEvents.ProjectCreatedDomainEvent(project.Id));
+
+        return project;
     }
 
     public Result UpdateName(string newProjectName)
@@ -77,6 +80,8 @@ public class Project : AggregateRoot<ProjectId>
         }
 
         Status = ProjectStatus.Completed;
+
+        RaiseDomainEvent(new DomainEvents.ProjectCompletedDomainEvent(Id));
         UpdateTimestamp();
 
         return Result.Success();
@@ -90,6 +95,8 @@ public class Project : AggregateRoot<ProjectId>
         }
 
         Status = ProjectStatus.Archived;
+
+        RaiseDomainEvent(new DomainEvents.ProjectArchivedDomainEvent(Id));
         UpdateTimestamp();
 
         return Result.Success();
