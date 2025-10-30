@@ -82,8 +82,60 @@ public class Project : AggregateRoot<ProjectId>
         {
             return ProjectErrors.StatusInvalidTransition;
         }
-        
+
         Status = ProjectStatus.Archived;
+        UpdateTimestamp();
+
+        return Result.Success();
+    }
+    #endregion
+
+    #region Member Management
+    public Result AddMember(UserId memberId)
+    {
+        if (Members.Contains(memberId))
+        {
+            return ProjectErrors.MemberAlreadyExists;
+        }
+
+        _members.Add(memberId);
+        UpdateTimestamp();
+
+        return Result.Success();
+    }
+    public Result RemoveMember(UserId memberId)
+    {
+        if (!_members.Remove(memberId))
+        {
+            return ProjectErrors.MemberNotFound;
+        }
+
+        UpdateTimestamp();
+
+        return Result.Success();
+    }
+    #endregion
+
+    #region Task Management
+    public Result AddTask(TaskId taskId)
+    {
+        if (Tasks.Contains(taskId))
+        {
+            return ProjectErrors.TaskAlreadyExists;
+        }
+
+        _tasks.Add(taskId);
+        UpdateTimestamp();
+
+        return Result.Success();
+    }
+    public Result RemoveTask(TaskId taskId)
+    {
+        if (!_tasks.Remove(taskId))
+        {
+            return ProjectErrors.TaskNotFound;
+        }
+
         UpdateTimestamp();
 
         return Result.Success();
