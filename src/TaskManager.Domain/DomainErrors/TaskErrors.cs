@@ -10,4 +10,5 @@ public static class TaskErrors
     public static Error DescriptionTooLong => new Error("Task.Description.TooLong", "タスクの説明は1000文字以内にしてください。");
 
     public static Error StatusInvalidTransition => new Error("Task.Status.InvalidTransition", "タスクの状態遷移が無効です。");
+    public static Error StatusAlreadyCompleted => new Error("Task.Status.AlreadyCompleted", "すでに完了済みのタスクです。");
 }

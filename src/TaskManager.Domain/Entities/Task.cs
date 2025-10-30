@@ -26,7 +26,7 @@ public class Task : AggregateRoot<TaskId>
         Title = title;
         var descriptionResult =TaskDescription.Create(string.Empty);
         Description = descriptionResult.Value!;
-        ValueObjects.TaskStatus.Create(TaskState.NotStarted);
+        Status = ValueObjects.TaskStatus.NotStarted;
         
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = CreatedAt;
@@ -58,36 +58,56 @@ public class Task : AggregateRoot<TaskId>
         {
             return titleResult.Error!;
         }
+
         Title = titleResult.Value!;
+
+
         return Result.Success();
     }
 
-    public Result UpdateStatus(TaskState newStatus)
+    #region Status Transition
+    public Result Start()
     {
-        switch (Status.Value)
+        if (Status != ValueObjects.TaskStatus.NotStarted)
         {
-            case TaskState.NotStarted:
-                if(newStatus != TaskState.InProgress)
-                {
-                    return DomainErrors.TaskErrors.StatusInvalidTransition;
-                }
-                break;
-            case TaskState.InProgress:
-                if(newStatus != TaskState.Completed)
-                {
-                    return DomainErrors.TaskErrors.StatusInvalidTransition;
-                }
-            break;
-            case TaskState.Completed:
-                if(newStatus == TaskState.Completed)
-                {
-                    return DomainErrors.TaskErrors.StatusInvalidTransition;
-                }
-                break;
+            return DomainErrors.TaskErrors.StatusInvalidTransition;
         }
 
-        Status = ValueObjects.TaskStatus.Create(newStatus);
+        Status = ValueObjects.TaskStatus.InProgress;
 
         return Result.Success();
     }
+
+    public Result Complete()
+    {
+        if (Status == ValueObjects.TaskStatus.Completed)
+        {
+            return DomainErrors.TaskErrors.StatusAlreadyCompleted;
+        }
+
+        Status = ValueObjects.TaskStatus.Completed;
+        CompletedAt = CompletedAt.Create();
+
+        return Result.Success();
+    }
+
+    public Result ReOpen(ValueObjects.TaskStatus newStatus)
+    {
+        if (Status != ValueObjects.TaskStatus.Completed)
+        {
+            return DomainErrors.TaskErrors.StatusInvalidTransition;
+        }
+
+        if(newStatus == ValueObjects.TaskStatus.Completed)
+        {
+            return DomainErrors.TaskErrors.StatusInvalidTransition;
+        }
+
+        Status = newStatus;
+        CompletedAt = null;
+
+
+        return Result.Success();
+    }
+    #endregion
 }
