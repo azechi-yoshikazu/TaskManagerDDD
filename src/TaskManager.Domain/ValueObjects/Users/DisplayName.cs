@@ -14,7 +14,7 @@ public sealed class DisplayName : ValueObject
 
     public static Result<DisplayName> Create(string value)
     {
-        if(string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             return UserErrors.DisplayNameIsRequired;
         }

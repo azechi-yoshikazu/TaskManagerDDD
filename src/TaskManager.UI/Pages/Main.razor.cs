@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TaskManager.UI.Pages
+﻿namespace TaskManager.UI.Pages
 {
     public partial class Main
     {

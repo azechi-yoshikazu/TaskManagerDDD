@@ -13,11 +13,11 @@ public sealed class TaskDescription : ValueObject
 
     public static Result<TaskDescription> Create(string value)
     {
-        if(value.Length > 1000)
+        if (value.Length > 1000)
         {
             return DomainErrors.TaskErrors.DescriptionTooLong;
         }
-        
+
         return new TaskDescription(value);
     }
 

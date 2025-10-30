@@ -9,7 +9,7 @@ internal class InMemoryTaskRepository : ITaskRepository
 
     public void Add(Domain.Entities.Task task)
     {
-        if(!_tasks.ContainsKey(task.Id))
+        if (!_tasks.ContainsKey(task.Id))
         {
             _tasks[task.Id] = task;
         }
@@ -17,7 +17,7 @@ internal class InMemoryTaskRepository : ITaskRepository
 
     public Domain.Entities.Task? FindById(TaskId taskId)
     {
-        if(_tasks.TryGetValue(taskId, out var task))
+        if (_tasks.TryGetValue(taskId, out var task))
         {
             return task;
         }
@@ -27,7 +27,7 @@ internal class InMemoryTaskRepository : ITaskRepository
 
     public void Remove(Domain.Entities.Task task)
     {
-        if(_tasks.ContainsKey(task.Id))
+        if (_tasks.ContainsKey(task.Id))
         {
             _tasks.Remove(task.Id);
         }
@@ -35,7 +35,7 @@ internal class InMemoryTaskRepository : ITaskRepository
 
     public void Update(Domain.Entities.Task task)
     {
-        if(_tasks.ContainsKey(task.Id))
+        if (_tasks.ContainsKey(task.Id))
         {
             _tasks[task.Id] = task;
         }

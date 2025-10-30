@@ -14,13 +14,13 @@ public partial class App : System.Windows.Application
         base.OnStartup(e);
 
         var serviceCollection = new ServiceCollection();
-        
+
         serviceCollection.AddWpfBlazorWebView();
         serviceCollection.AddBlazorWebViewDeveloperTools();
 
         serviceCollection.AddInfrastructureServices();
-        
-        
+
+
         var mainWindow = new MainWindow();
         mainWindow.Resources.Add("services", serviceCollection.BuildServiceProvider());
 

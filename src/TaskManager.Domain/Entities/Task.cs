@@ -20,8 +20,8 @@ public class Task : AggregateRoot<TaskId>
     public UserId? AssignedUserId { get; private set; }
     public ProjectId ProjectId { get; private set; }
 
-    public bool Expired => 
-        DueDate is not null && 
+    public bool Expired =>
+        DueDate is not null &&
         DueDate.Value < DateTime.UtcNow &&
         Status != ValueObjects.Tasks.TaskStatus.Completed;
 
@@ -29,10 +29,10 @@ public class Task : AggregateRoot<TaskId>
         : base(id)
     {
         Title = title;
-        var descriptionResult =TaskDescription.Create(string.Empty);
+        var descriptionResult = TaskDescription.Create(string.Empty);
         Description = descriptionResult.Value!;
         Status = ValueObjects.Tasks.TaskStatus.NotStarted;
-        
+
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = CreatedAt;
         DueDate = null;
@@ -122,7 +122,7 @@ public class Task : AggregateRoot<TaskId>
             return DomainErrors.TaskErrors.StatusInvalidTransition;
         }
 
-        if(newStatus == ValueObjects.Tasks.TaskStatus.Completed)
+        if (newStatus == ValueObjects.Tasks.TaskStatus.Completed)
         {
             return DomainErrors.TaskErrors.StatusInvalidTransition;
         }
@@ -138,7 +138,7 @@ public class Task : AggregateRoot<TaskId>
 
     public Result UpdateDueDate(DateTime? newDueDate)
     {
-        if(Status == ValueObjects.Tasks.TaskStatus.Completed)
+        if (Status == ValueObjects.Tasks.TaskStatus.Completed)
         {
             return TaskErrors.DueDateAlreadyCompleted;
         }
@@ -156,7 +156,7 @@ public class Task : AggregateRoot<TaskId>
         }
 
         AssignedUserId = userId;
-        
+
         RaiseDomainEvent(new DomainEvents.Tasks.TaskAssignedDomainEvent(Id, AssignedUserId));
         UpdateTimestamp();
 
