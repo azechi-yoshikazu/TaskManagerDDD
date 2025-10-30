@@ -35,9 +35,15 @@ public class Project : AggregateRoot<ProjectId>
         UpdatedAt = CreatedAt;
     }
 
-    public static Project Create(ProjectName name, UserId ownerId)
+    public static Result<Project> Create(string projectName, UserId ownerId)
     {
-        return new Project(ProjectId.Create(), name, ownerId);
+        var nameResult = ProjectName.Create(projectName);
+        if (nameResult.IsFailure)
+        {
+            return nameResult.Error!;
+        }
+
+        return new Project(ProjectId.Create(), nameResult.Value!, ownerId);
     }
 
     public Result UpdateName(string newProjectName)
