@@ -10,7 +10,7 @@ public sealed class InMemoryProjectRepository : IProjectRepository
 
     public void Add(Project project)
     {
-        if(!_projects.ContainsKey(project.Id))
+        if (!_projects.ContainsKey(project.Id))
         {
             _projects[project.Id] = project;
         }

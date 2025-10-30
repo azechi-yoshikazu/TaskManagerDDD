@@ -10,7 +10,7 @@ public sealed class InMemoryUserRepository : IUserRepository
 
     public void Add(User user)
     {
-        if(!_users.ContainsKey(user.Id))
+        if (!_users.ContainsKey(user.Id))
         {
             _users.Add(user.Id, user);
         }
@@ -28,7 +28,7 @@ public sealed class InMemoryUserRepository : IUserRepository
 
     public void Remove(User user)
     {
-        if(_users.ContainsKey(user.Id))
+        if (_users.ContainsKey(user.Id))
         {
             _users.Remove(user.Id);
         }
@@ -36,7 +36,7 @@ public sealed class InMemoryUserRepository : IUserRepository
 
     public void Update(User user)
     {
-        if(_users.ContainsKey(user.Id))
+        if (_users.ContainsKey(user.Id))
         {
             _users[user.Id] = user;
         }

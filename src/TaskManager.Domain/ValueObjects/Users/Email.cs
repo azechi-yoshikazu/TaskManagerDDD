@@ -15,12 +15,12 @@ public sealed class Email : ValueObject
 
     public static Result<Email> Create(string value)
     {
-        if(string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             return UserErrors.EmailIsRequired;
         }
 
-        if(!IsValidFormat(value))
+        if (!IsValidFormat(value))
         {
             return UserErrors.EmailInvalidFormat;
         }
