@@ -1,7 +1,7 @@
 ﻿using TaskManager.Domain.DomainErrors;
 using TaskManager.Domain.Primitives;
 
-namespace TaskManager.Domain.ValueObjects;
+namespace TaskManager.Domain.ValueObjects.Projects;
 
 public sealed class ProjectName : ValueObject
 {

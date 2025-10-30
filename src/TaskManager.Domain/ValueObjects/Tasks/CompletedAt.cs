@@ -1,5 +1,4 @@
-﻿
-namespace TaskManager.Domain.ValueObjects
+﻿namespace TaskManager.Domain.ValueObjects.Tasks
 {
     public class CompletedAt : DateTimeVO
     {

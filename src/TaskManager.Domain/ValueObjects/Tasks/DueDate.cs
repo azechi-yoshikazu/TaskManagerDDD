@@ -1,5 +1,4 @@
-﻿
-namespace TaskManager.Domain.ValueObjects;
+﻿namespace TaskManager.Domain.ValueObjects.Tasks;
 
 public class DueDate : DateTimeVO
 {

@@ -1,6 +1,8 @@
 ﻿using TaskManager.Domain.DomainErrors;
 using TaskManager.Domain.Primitives;
-using TaskManager.Domain.ValueObjects;
+using TaskManager.Domain.ValueObjects.Projects;
+using TaskManager.Domain.ValueObjects.Tasks;
+using TaskManager.Domain.ValueObjects.Users;
 
 namespace TaskManager.Domain.Entities;
 
@@ -44,7 +46,7 @@ public class Project : AggregateRoot<ProjectId>
         }
 
         var project = new Project(ProjectId.Create(), nameResult.Value!, ownerId);
-        project.RaiseDomainEvent(new DomainEvents.ProjectCreatedDomainEvent(project.Id));
+        project.RaiseDomainEvent(new DomainEvents.Projects.ProjectCreatedDomainEvent(project.Id));
 
         return project;
     }
@@ -81,7 +83,7 @@ public class Project : AggregateRoot<ProjectId>
 
         Status = ProjectStatus.Completed;
 
-        RaiseDomainEvent(new DomainEvents.ProjectCompletedDomainEvent(Id));
+        RaiseDomainEvent(new DomainEvents.Projects.ProjectCompletedDomainEvent(Id));
         UpdateTimestamp();
 
         return Result.Success();
@@ -96,7 +98,7 @@ public class Project : AggregateRoot<ProjectId>
 
         Status = ProjectStatus.Archived;
 
-        RaiseDomainEvent(new DomainEvents.ProjectArchivedDomainEvent(Id));
+        RaiseDomainEvent(new DomainEvents.Projects.ProjectArchivedDomainEvent(Id));
         UpdateTimestamp();
 
         return Result.Success();

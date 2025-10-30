@@ -1,6 +1,6 @@
 ﻿using TaskManager.Domain.Primitives;
 
-namespace TaskManager.Domain.ValueObjects;
+namespace TaskManager.Domain.ValueObjects.Projects;
 
 public sealed class ProjectDescription : ValueObject
 {

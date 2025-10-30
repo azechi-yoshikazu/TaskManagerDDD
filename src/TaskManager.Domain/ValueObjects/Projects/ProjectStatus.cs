@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Domain.ValueObjects;
+﻿namespace TaskManager.Domain.ValueObjects.Projects;
 
 public enum ProjectStatus
 {

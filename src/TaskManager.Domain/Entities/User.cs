@@ -1,5 +1,5 @@
 ﻿using TaskManager.Domain.Primitives;
-using TaskManager.Domain.ValueObjects;
+using TaskManager.Domain.ValueObjects.Users;
 
 namespace TaskManager.Domain.Entities;
 
@@ -37,7 +37,7 @@ public sealed class User : AggregateRoot<UserId>
             return emailResult.Error!;
         }
         var user = new User(UserId.Create(), displayNameResult.Value!, emailResult.Value!, role);
-        user.RaiseDomainEvent(new DomainEvents.UserRegisteredDomainEvent(user.Id));
+        user.RaiseDomainEvent(new DomainEvents.Users.UserRegisteredDomainEvent(user.Id));
 
         return user;
     }
@@ -52,7 +52,7 @@ public sealed class User : AggregateRoot<UserId>
     public Result Deactivate()
     {
         Active = false;
-        RaiseDomainEvent(new DomainEvents.UserDeactivatedDomainEvent(Id));
+        RaiseDomainEvent(new DomainEvents.Users.UserDeactivatedDomainEvent(Id));
 
         return Result.Success();
     }
