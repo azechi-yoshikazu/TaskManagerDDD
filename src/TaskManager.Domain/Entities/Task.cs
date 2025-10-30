@@ -20,6 +20,11 @@ public class Task : AggregateRoot<TaskId>
     private List<TaskId> _subTasks;
     public IReadOnlyList<TaskId> SubTasks => _subTasks.AsReadOnly();
 
+    public bool Expired => 
+        DueDate is not null && 
+        DueDate.Value < DateTime.UtcNow &&
+        Status != ValueObjects.TaskStatus.Completed;
+
     private Task(TaskId id, TaskTitle title, ProjectId projectId)
         : base(id)
     {
@@ -60,6 +65,7 @@ public class Task : AggregateRoot<TaskId>
         }
 
         Title = titleResult.Value!;
+        UpdateTimestamp();
 
 
         return Result.Success();
@@ -74,6 +80,7 @@ public class Task : AggregateRoot<TaskId>
         }
 
         Status = ValueObjects.TaskStatus.InProgress;
+        UpdateTimestamp();
 
         return Result.Success();
     }
@@ -87,6 +94,7 @@ public class Task : AggregateRoot<TaskId>
 
         Status = ValueObjects.TaskStatus.Completed;
         CompletedAt = CompletedAt.Create();
+        UpdateTimestamp();
 
         return Result.Success();
     }
@@ -105,9 +113,15 @@ public class Task : AggregateRoot<TaskId>
 
         Status = newStatus;
         CompletedAt = null;
+        UpdateTimestamp();
 
 
         return Result.Success();
     }
     #endregion
+
+    private void UpdateTimestamp()
+    {
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
