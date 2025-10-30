@@ -48,7 +48,10 @@ public class Task : AggregateRoot<TaskId>
             return titleResult.Error!;
         }
 
-        return new Task(TaskId.Create(), titleResult.Value!, ProjectId.Create());
+        var task = new Task(TaskId.Create(), titleResult.Value!, ProjectId.Create());
+        task.RaiseDomainEvent(new DomainEvents.TaskCompletedDomainEvent(task.Id));
+
+        return task;
     }
 
     public Result UpdateTitle(string newTitle)
@@ -103,6 +106,8 @@ public class Task : AggregateRoot<TaskId>
 
         Status = ValueObjects.TaskStatus.Completed;
         CompletedAt = CompletedAt.Create();
+
+        RaiseDomainEvent(new DomainEvents.TaskCompletedDomainEvent(Id));
         UpdateTimestamp();
 
         return Result.Success();
@@ -150,7 +155,9 @@ public class Task : AggregateRoot<TaskId>
 
         AssignedUserId = userId;
         
+        RaiseDomainEvent(new DomainEvents.TaskAssignedDomainEvent(Id, AssignedUserId));
         UpdateTimestamp();
+
         return Result.Success();
     }
 
