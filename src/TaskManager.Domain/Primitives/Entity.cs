@@ -1,23 +1,17 @@
 ﻿namespace TaskManager.Domain.Primitives;
 
-public abstract class Entity
+public abstract class Entity<TId>
 {
-    public Guid Id { get; private set; }
+    public TId Id { get; private set; }
 
-    protected Entity()
-    {
-        Id = Guid.NewGuid();
-    }
+    protected Entity(TId id) => Id = id;
 
     public override bool Equals(object? obj)
     {
-        if (obj is not Entity other)
+        if (obj is not Entity<TId> other)
             return false;
-        return Id == other.Id;
+        return EqualityComparer<TId>.Default.Equals(Id, other.Id);
     }
 
-    public override int GetHashCode()
-    {
-        return Id.GetHashCode();
-    }
+    public override int GetHashCode() => Id?.GetHashCode() ?? 0;
 }
