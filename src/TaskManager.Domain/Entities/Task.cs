@@ -1,6 +1,8 @@
 ﻿using TaskManager.Domain.DomainErrors;
 using TaskManager.Domain.Primitives;
-using TaskManager.Domain.ValueObjects;
+using TaskManager.Domain.ValueObjects.Projects;
+using TaskManager.Domain.ValueObjects.Tasks;
+using TaskManager.Domain.ValueObjects.Users;
 
 namespace TaskManager.Domain.Entities;
 
@@ -8,7 +10,7 @@ public class Task : AggregateRoot<TaskId>
 {
     public TaskTitle Title { get; private set; }
     public TaskDescription Description { get; private set; }
-    public ValueObjects.TaskStatus Status { get; private set; }
+    public ValueObjects.Tasks.TaskStatus Status { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
@@ -21,7 +23,7 @@ public class Task : AggregateRoot<TaskId>
     public bool Expired => 
         DueDate is not null && 
         DueDate.Value < DateTime.UtcNow &&
-        Status != ValueObjects.TaskStatus.Completed;
+        Status != ValueObjects.Tasks.TaskStatus.Completed;
 
     private Task(TaskId id, TaskTitle title, ProjectId projectId)
         : base(id)
@@ -29,7 +31,7 @@ public class Task : AggregateRoot<TaskId>
         Title = title;
         var descriptionResult =TaskDescription.Create(string.Empty);
         Description = descriptionResult.Value!;
-        Status = ValueObjects.TaskStatus.NotStarted;
+        Status = ValueObjects.Tasks.TaskStatus.NotStarted;
         
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = CreatedAt;
@@ -49,7 +51,7 @@ public class Task : AggregateRoot<TaskId>
         }
 
         var task = new Task(TaskId.Create(), titleResult.Value!, ProjectId.Create());
-        task.RaiseDomainEvent(new DomainEvents.TaskCompletedDomainEvent(task.Id));
+        task.RaiseDomainEvent(new DomainEvents.Tasks.TaskCompletedDomainEvent(task.Id));
 
         return task;
     }
@@ -86,12 +88,12 @@ public class Task : AggregateRoot<TaskId>
     #region Status Transition
     public Result Start()
     {
-        if (Status != ValueObjects.TaskStatus.NotStarted)
+        if (Status != ValueObjects.Tasks.TaskStatus.NotStarted)
         {
             return DomainErrors.TaskErrors.StatusInvalidTransition;
         }
 
-        Status = ValueObjects.TaskStatus.InProgress;
+        Status = ValueObjects.Tasks.TaskStatus.InProgress;
         UpdateTimestamp();
 
         return Result.Success();
@@ -99,28 +101,28 @@ public class Task : AggregateRoot<TaskId>
 
     public Result Complete()
     {
-        if (Status == ValueObjects.TaskStatus.Completed)
+        if (Status == ValueObjects.Tasks.TaskStatus.Completed)
         {
             return DomainErrors.TaskErrors.StatusAlreadyCompleted;
         }
 
-        Status = ValueObjects.TaskStatus.Completed;
+        Status = ValueObjects.Tasks.TaskStatus.Completed;
         CompletedAt = CompletedAt.Create();
 
-        RaiseDomainEvent(new DomainEvents.TaskCompletedDomainEvent(Id));
+        RaiseDomainEvent(new DomainEvents.Tasks.TaskCompletedDomainEvent(Id));
         UpdateTimestamp();
 
         return Result.Success();
     }
 
-    public Result ReOpen(ValueObjects.TaskStatus newStatus)
+    public Result ReOpen(ValueObjects.Tasks.TaskStatus newStatus)
     {
-        if (Status != ValueObjects.TaskStatus.Completed)
+        if (Status != ValueObjects.Tasks.TaskStatus.Completed)
         {
             return DomainErrors.TaskErrors.StatusInvalidTransition;
         }
 
-        if(newStatus == ValueObjects.TaskStatus.Completed)
+        if(newStatus == ValueObjects.Tasks.TaskStatus.Completed)
         {
             return DomainErrors.TaskErrors.StatusInvalidTransition;
         }
@@ -136,7 +138,7 @@ public class Task : AggregateRoot<TaskId>
 
     public Result UpdateDueDate(DateTime? newDueDate)
     {
-        if(Status == ValueObjects.TaskStatus.Completed)
+        if(Status == ValueObjects.Tasks.TaskStatus.Completed)
         {
             return TaskErrors.DueDateAlreadyCompleted;
         }
@@ -155,7 +157,7 @@ public class Task : AggregateRoot<TaskId>
 
         AssignedUserId = userId;
         
-        RaiseDomainEvent(new DomainEvents.TaskAssignedDomainEvent(Id, AssignedUserId));
+        RaiseDomainEvent(new DomainEvents.Tasks.TaskAssignedDomainEvent(Id, AssignedUserId));
         UpdateTimestamp();
 
         return Result.Success();

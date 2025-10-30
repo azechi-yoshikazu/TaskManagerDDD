@@ -1,5 +1,5 @@
 ﻿using TaskManager.Domain.Repositories;
-using TaskManager.Domain.ValueObjects;
+using TaskManager.Domain.ValueObjects.Tasks;
 
 namespace TaskManager.Infrastructure.Repositories.Mock;
 

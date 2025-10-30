@@ -1,6 +1,6 @@
 ﻿using TaskManager.Domain.Entities;
 using TaskManager.Domain.Repositories;
-using TaskManager.Domain.ValueObjects;
+using TaskManager.Domain.ValueObjects.Projects;
 
 namespace TaskManager.Infrastructure.Repositories.Mock;
 

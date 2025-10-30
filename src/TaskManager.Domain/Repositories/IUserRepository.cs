@@ -1,4 +1,6 @@
-﻿namespace TaskManager.Domain.Repositories;
+﻿using TaskManager.Domain.ValueObjects.Users;
+
+namespace TaskManager.Domain.Repositories;
 
 public interface IUserRepository
 {
@@ -6,5 +8,5 @@ public interface IUserRepository
     void Update(Entities.User user);
     void Remove(Entities.User user);
 
-    Entities.User? FindById(ValueObjects.UserId userId);
+    Entities.User? FindById(UserId userId);
 }
