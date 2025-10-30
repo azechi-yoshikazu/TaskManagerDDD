@@ -4,6 +4,7 @@ namespace TaskManager.Domain.ValueObjects;
 
 public sealed class UserId : ValueObject
 {
+    // TODO: string and format USER-XXXXXX
     public Guid Value { get; }
 
     private UserId(Guid value)
@@ -11,7 +12,7 @@ public sealed class UserId : ValueObject
         Value = value;
     }
 
-    public static UserId Create(Guid value) => new UserId(value);
+    public static UserId Create() => new UserId(Guid.NewGuid());
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {
