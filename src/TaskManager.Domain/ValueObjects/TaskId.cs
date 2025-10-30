@@ -11,7 +11,7 @@ public class TaskId : ValueObject
         Value = value;
     }
 
-    public static TaskId Create() => new TaskId(DateTime.Now.ToShortDateString());
+    public static TaskId Create() => new TaskId(DateTime.Now.ToShortDateString());// TODO: Format: TASK-YYYYMMDD-XXXX
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {
