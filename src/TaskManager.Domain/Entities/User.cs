@@ -36,7 +36,10 @@ public sealed class User : AggregateRoot<UserId>
         {
             return emailResult.Error!;
         }
-        return new User(UserId.Create(), displayNameResult.Value!, emailResult.Value!, role);
+        var user = new User(UserId.Create(), displayNameResult.Value!, emailResult.Value!, role);
+        user.RaiseDomainEvent(new DomainEvents.UserRegisteredDomainEvent(user.Id));
+
+        return user;
     }
 
     public Result Activate()
@@ -49,6 +52,7 @@ public sealed class User : AggregateRoot<UserId>
     public Result Deactivate()
     {
         Active = false;
+        RaiseDomainEvent(new DomainEvents.UserDeactivatedDomainEvent(Id));
 
         return Result.Success();
     }
