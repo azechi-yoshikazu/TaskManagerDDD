@@ -1,4 +1,5 @@
-﻿using TaskManager.Domain.Primitives;
+﻿using TaskManager.Domain.DomainErrors;
+using TaskManager.Domain.Primitives;
 using TaskManager.Domain.ValueObjects;
 
 namespace TaskManager.Domain.Entities;
@@ -16,9 +17,6 @@ public class Task : AggregateRoot<TaskId>
 
     public UserId? AssignedUserId { get; private set; }
     public ProjectId ProjectId { get; private set; }
-
-    private List<TaskId> _subTasks;
-    public IReadOnlyList<TaskId> SubTasks => _subTasks.AsReadOnly();
 
     public bool Expired => 
         DueDate is not null && 
@@ -40,9 +38,6 @@ public class Task : AggregateRoot<TaskId>
 
         AssignedUserId = null;
         ProjectId = projectId;
-
-        _subTasks = new();
-
     }
 
     public static Result<Task> Create(string title, ProjectId projectId)
@@ -67,6 +62,20 @@ public class Task : AggregateRoot<TaskId>
         Title = titleResult.Value!;
         UpdateTimestamp();
 
+
+        return Result.Success();
+    }
+
+    public Result UpdateDescription(string newDescription)
+    {
+        var descriptionResult = TaskDescription.Create(newDescription);
+        if (descriptionResult.IsFailure)
+        {
+            return descriptionResult.Error!;
+        }
+
+        Description = descriptionResult.Value!;
+        UpdateTimestamp();
 
         return Result.Success();
     }
@@ -119,6 +128,31 @@ public class Task : AggregateRoot<TaskId>
         return Result.Success();
     }
     #endregion
+
+    public Result UpdateDueDate(DateTime? newDueDate)
+    {
+        if(Status == ValueObjects.TaskStatus.Completed)
+        {
+            return TaskErrors.DueDateAlreadyCompleted;
+        }
+
+        DueDate = newDueDate is not null ? DueDate.Create(newDueDate.Value) : null;
+        UpdateTimestamp();
+        return Result.Success();
+    }
+
+    public Result AssignUser(UserId? userId)
+    {
+        if (AssignedUserId == userId)
+        {
+            return TaskErrors.NoChanged;
+        }
+
+        AssignedUserId = userId;
+        
+        UpdateTimestamp();
+        return Result.Success();
+    }
 
     private void UpdateTimestamp()
     {
