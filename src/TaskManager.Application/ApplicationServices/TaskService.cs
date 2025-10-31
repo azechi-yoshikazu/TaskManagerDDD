@@ -24,7 +24,7 @@ public sealed class TaskService
         return _taskAssignmentService.CreateTaskAndAssignToProject(title, projectId);
     }
 
-    public Result UpdateTaskInfo(TaskId taskId, string newTitle, string newDescription)
+    public Result<Domain.Entities.Task> UpdateTaskInfo(TaskId taskId, string newTitle, string newDescription)
     {
         var task = _taskRepository.FindById(taskId);
         if (task is null)
@@ -46,10 +46,10 @@ public sealed class TaskService
 
         _taskRepository.Update(task);
 
-        return Result.Success();
+        return task;
     }
 
-    public Result AssignTaskToUser(TaskId taskId, UserId? userId)
+    public Result<Domain.Entities.Task> AssignTaskToUser(TaskId taskId, UserId? userId)
     {
         var task = _taskRepository.FindById(taskId);
         if (task is null)
@@ -65,10 +65,10 @@ public sealed class TaskService
 
         _taskRepository.Update(task);
 
-        return Result.Success();
+        return task;
     }
 
-    public Result CompleteTask(TaskId taskId)
+    public Result<Domain.Entities.Task> CompleteTask(TaskId taskId)
     {
         // Move to Domain service if projects are involved in future.
         var task = _taskRepository.FindById(taskId);
@@ -85,10 +85,10 @@ public sealed class TaskService
         
         _taskRepository.Update(task);
         
-        return Result.Success();
+        return task;
     }
 
-    public Result ReopenTask(TaskId taskId, Domain.ValueObjects.Tasks.TaskStatus taskStatus)
+    public Result<Domain.Entities.Task> ReopenTask(TaskId taskId, Domain.ValueObjects.Tasks.TaskStatus taskStatus)
     {
         var task = _taskRepository.FindById(taskId);
         if (task is null)
@@ -103,8 +103,8 @@ public sealed class TaskService
         }
         
         _taskRepository.Update(task);
-        
-        return Result.Success();
+
+        return task;
     }
 
     public Result DeleteTask(TaskId taskId)
