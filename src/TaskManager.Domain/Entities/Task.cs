@@ -50,7 +50,7 @@ public class Task : AggregateRoot<TaskId>
             return titleResult.Error!;
         }
 
-        var task = new Task(TaskId.Create(), titleResult.Value!, ProjectId.Create());
+        var task = new Task(TaskId.Create(), titleResult.Value!, projectId);
         task.RaiseDomainEvent(new DomainEvents.Tasks.TaskCompletedDomainEvent(task.Id));
 
         return task;
