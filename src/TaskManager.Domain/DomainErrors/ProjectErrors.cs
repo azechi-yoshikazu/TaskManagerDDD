@@ -4,6 +4,8 @@ namespace TaskManager.Domain.DomainErrors;
 
 public static class ProjectErrors
 {
+    public static Error NotFound => new Error("Project.NotFound", "プロジェクトが存在しません。");
+
     public static Error NameEmpty => new Error("Project.Name.Empty", "プロジェクト名は空には出来ません。");
     public static Error NameTooLong => new Error("Project.Name.TooLong", "プロジェクト名は100文字以内にしてください。");
 

@@ -4,6 +4,7 @@ namespace TaskManager.Domain.DomainErrors;
 
 public static class TaskErrors
 {
+    public static Error NotFound => new Error("Task.NotFound", "タスクが存在しません。");
     public static Error NoChanged => new Error("Task.NoChanged", "変更がありません。");
 
     public static Error TitleEmpty => new Error("Task.Title.Empty", "タスクタイトルは空には出来ません。");

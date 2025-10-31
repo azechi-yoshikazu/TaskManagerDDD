@@ -1,6 +1,7 @@
 ﻿using TaskManager.Domain.Entities;
 using TaskManager.Domain.Repositories;
 using TaskManager.Domain.ValueObjects.Projects;
+using TaskManager.Domain.ValueObjects.Users;
 
 namespace TaskManager.Infrastructure.Repositories.Mock;
 
@@ -23,6 +24,11 @@ public sealed class InMemoryProjectRepository : IProjectRepository
             return project;
         }
         return null;
+    }
+
+    public IEnumerable<Project> FindByOwnerId(UserId userId)
+    {
+        return _projects.Values.Where(x => x.OwnerId == userId);
     }
 
     public void Remove(Project project)

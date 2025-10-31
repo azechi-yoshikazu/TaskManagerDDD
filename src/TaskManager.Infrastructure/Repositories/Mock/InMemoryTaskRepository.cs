@@ -1,5 +1,6 @@
 ﻿using TaskManager.Domain.Repositories;
 using TaskManager.Domain.ValueObjects.Tasks;
+using TaskManager.Domain.ValueObjects.Users;
 
 namespace TaskManager.Infrastructure.Repositories.Mock;
 
@@ -23,6 +24,11 @@ internal class InMemoryTaskRepository : ITaskRepository
         }
 
         return null;
+    }
+
+    public IEnumerable<Domain.Entities.Task> FindByUserId(UserId userId)
+    {
+        return _tasks.Values.Where(x => x.AssignedUserId == userId);
     }
 
     public void Remove(Domain.Entities.Task task)
